@@ -34,7 +34,7 @@ app.post('/api/llms', async (req, res) => {
 //     res.json(llms);
 // });
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 8;
 
 app.get('/api/llms', async (req, res) => {
     try {
