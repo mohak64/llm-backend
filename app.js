@@ -45,16 +45,13 @@ app.get('/api/llms', async (req, res) => {
             .skip(startIndex)
             .limit(ITEMS_PER_PAGE);
 
-        res.json({
-            llms,
-            currentPage: page,
-            totalPages: Math.ceil(llms.length / ITEMS_PER_PAGE),
-        });
+        res.json(llms);
     } catch (error) {
         console.error('Error fetching LLMs:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 
 app.listen(port, () => {
