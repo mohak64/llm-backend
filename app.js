@@ -36,14 +36,20 @@ app.post('/api/llms', async (req, res) => {
 
 const ITEMS_PER_PAGE = 8;
 
+const MAX_ITEMS_PER_PAGE = 8;
+
 app.get('/api/llms', async (req, res) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const startIndex = (page - 1) * ITEMS_PER_PAGE;
+        let page = parseInt(req.query.page) || 1;
+        const requestedLimit = parseInt(req.query.limit) || ITEMS_PER_PAGE;
+
+        const limit = Math.min(requestedLimit, MAX_ITEMS_PER_PAGE);
+
+        const startIndex = (page - 1) * limit;
 
         const llms = await LLModel.find()
             .skip(startIndex)
-            .limit(ITEMS_PER_PAGE);
+            .limit(limit);
 
         res.json(llms);
     } catch (error) {
@@ -51,6 +57,7 @@ app.get('/api/llms', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 
 
