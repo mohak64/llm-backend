@@ -29,10 +29,33 @@ app.post('/api/llms', async (req, res) => {
     res.status(201).json(newLLM);
 });
 
+// app.get('/api/llms', async (req, res) => {
+//     const llms = await LLModel.find();
+//     res.json(llms);
+// });
+
+const ITEMS_PER_PAGE = 10;
+
 app.get('/api/llms', async (req, res) => {
-    const llms = await LLModel.find();
-    res.json(llms);
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const startIndex = (page - 1) * ITEMS_PER_PAGE;
+
+        const llms = await LLModel.find()
+            .skip(startIndex)
+            .limit(ITEMS_PER_PAGE);
+
+        res.json({
+            llms,
+            currentPage: page,
+            totalPages: Math.ceil(llms.length / ITEMS_PER_PAGE),
+        });
+    } catch (error) {
+        console.error('Error fetching LLMs:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
