@@ -58,6 +58,23 @@ app.get('/api/llms', async (req, res) => {
     }
 });
 
+app.get('/api/llms/:id', async (req, res) => {
+    try {
+        const llmId = req.params.id;
+        const llm = await LLModel.findById(llmId);
+
+        if (!llm) {
+            return res.status(404).json({ error: 'LLM not found' });
+        }
+
+        res.json(llm);
+    } catch (error) {
+        console.error('Error fetching LLM by ID:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
 
 
 
